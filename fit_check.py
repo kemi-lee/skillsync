@@ -4,6 +4,20 @@ from anthropic import Anthropic
 
 load_dotenv()
 client = Anthropic()
+MODEL = "claude-sonnet-5-5"
+
+
+def ask_claude(prompt, max_tokens=1500):
+    message = client.messages.create(
+        model=MODEL,
+        max_tokens=max_tokens,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    text = ""
+    for block in message.content:
+        if block.type == "text":
+            text += block.text
+    return text.strip()
 
 
 def check_fit(posting, skills):
@@ -21,22 +35,31 @@ Reply with ONLY a JSON object, no other text, with these keys:
 - "strong_fit": true or false
 - "summary": one or two sentences explaining the verdict
 """
-    message = client.messages.create(
-        model="claude-sonnet-5-5",
-        max_tokens=1500,
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    text = ""
-    for block in message.content:
-        if block.type == "text":
-            text += block.text
-
+    text = ask_claude(prompt)
     text = text.replace("```json", "").replace("```", "").strip()
     return json.loads(text)
+
+
+def make_plan(missing):
+    skills_text = ", ".join(missing)
+    prompt = f"""Create a short learning plan for someone who wants to learn: {skills_text}.
+For each skill, give 2 or 3 bullet points and one small first step.
+Plain text, under 200 words."""
+    return ask_claude(prompt)
 
 
 if __name__ == "__main__":
     posting = "Junior Python developer. Required: Python, Flask, SQL, Git, REST APIs. Nice to have: Docker."
     skills = "Python, JavaScript, SQL, Git, PHP"
-    print(json.dumps(check_fit(posting, skills), indent=2))
+
+    result = check_fit(posting, skills)
+    print("Strong fit:", "Yes" if result["strong_fit"] else "Not yet")
+    print(result["summary"])
+    print("Matched:", ", ".join(result["matched"]))
+    print("Missing:", ", ".join(result["missing"]))
+
+    if result["missing"]:
+        answer = input("\nWant a short plan to learn the missing skills? (yes/no): ")
+        if answer.strip().lower().startswith("y"):
+            print()
+            print(make_plan(result["missing"]))
