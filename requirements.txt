@@ -1,2 +1,4 @@
 flask
 pytest
+anthropic
+python-dotenv
