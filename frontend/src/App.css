@@ -1,0 +1,48 @@
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: left;
+}
+
+.subtitle {
+  color: #666;
+}
+
+label {
+  display: block;
+  margin: 1rem 0;
+  font-weight: 600;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.6rem;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.card {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.error {
+  color: #b00020;
+}
+
+.plan {
+  white-space: pre-wrap;
+  font: inherit;
+  margin-top: 1rem;
+}

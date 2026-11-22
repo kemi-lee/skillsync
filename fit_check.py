@@ -29,6 +29,11 @@ Job posting:
 Candidate skills:
 {skills}
 
+Rules:
+- Only list concrete skills, tools, languages or technologies (for example "Python", "SQL", "CI/CD"). Do not list degrees, years of experience, or soft skills.
+- Use short names, 1 to 3 words each.
+- If the posting names few concrete skills, say so in the summary instead of inventing requirements.
+
 Reply with ONLY a JSON object, no other text, with these keys:
 - "matched": list of required skills the candidate has
 - "missing": list of required skills the candidate lacks
@@ -38,7 +43,6 @@ Reply with ONLY a JSON object, no other text, with these keys:
     text = ask_claude(prompt)
     text = text.replace("```json", "").replace("```", "").strip()
     return json.loads(text)
-
 
 def make_plan(missing):
     skills_text = ", ".join(missing)
