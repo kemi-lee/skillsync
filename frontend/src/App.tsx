@@ -6,6 +6,7 @@ type FitResult = {
   missing: string[]
   strong_fit: boolean
   summary: string
+  enough_detail?: boolean
 }
 
 async function postJson(url: string, body: unknown) {
@@ -58,7 +59,11 @@ function App() {
   }
 
   const askAboutPlan =
-    result && result.missing.length > 0 && !plan && !declined
+    result &&
+    result.enough_detail !== false &&
+    result.missing.length > 0 &&
+    !plan &&
+    !declined
 
   return (
     <main className="app">
@@ -94,7 +99,13 @@ function App() {
 
       {result && (
         <section className="card">
-          <h2>{result.strong_fit ? 'Strong fit' : 'Not a strong fit yet'}</h2>
+          <h2>
+            {result.enough_detail === false
+              ? "Can't tell yet"
+              : result.strong_fit
+                ? 'Strong fit'
+                : 'Not a strong fit yet'}
+          </h2>
           <p>{result.summary}</p>
           <p>
             <strong>Matched:</strong> {result.matched.join(', ') || 'None'}

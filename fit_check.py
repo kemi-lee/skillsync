@@ -45,6 +45,7 @@ Reply with ONLY a JSON object, no other text, with these keys:
 - "missing": list of required skills the candidate lacks
 - "strong_fit": true or false
 - "summary": one or two sentences explaining the verdict
+- "enough_detail": true if the posting names at least 3 concrete skills or technologies, otherwise false
 """
     text = ask_claude(prompt)
     text = text.replace("```json", "").replace("```", "").strip()
