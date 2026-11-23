@@ -1,9 +1,15 @@
 import json
+from pathlib import Path
 from dotenv import load_dotenv
 from anthropic import Anthropic
 
 load_dotenv()
 MODEL = "claude-sonnet-5-5"
+def load_resume():
+    path = Path(__file__).parent / "resume.txt"
+    if path.exists():
+        return path.read_text(encoding="utf-8")
+    return ""
 
 
 def ask_claude(prompt, max_tokens=1500):
@@ -54,7 +60,7 @@ Plain text, under 200 words."""
 
 if __name__ == "__main__":
     posting = "Junior Python developer. Required: Python, Flask, SQL, Git, REST APIs. Nice to have: Docker."
-    skills = "Python, JavaScript, SQL, Git, PHP"
+    skills = load_resume()
 
     result = check_fit(posting, skills)
     print("Strong fit:", "Yes" if result["strong_fit"] else "Not yet")

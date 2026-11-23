@@ -77,12 +77,12 @@ function App() {
       </label>
 
       <label>
-        My skills
+        My skills (optional)
         <textarea
           rows={3}
           value={skills}
           onChange={(e) => setSkills(e.target.value)}
-          placeholder="Python, SQL, Git..."
+          placeholder="Leave empty to use your saved resume"
         />
       </label>
 

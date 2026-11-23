@@ -45,3 +45,18 @@ def test_plan_returns_plan(monkeypatch):
     response = client.post("/api/plan", json={"missing": ["Flask"]})
     assert response.status_code == 200
     assert response.get_json()["plan"] == "Fake plan"
+
+def test_fit_uses_saved_resume_when_no_skills(monkeypatch):
+    seen = {}
+
+    def fake_check_fit(posting, skills):
+        seen["skills"] = skills
+        return {"matched": [], "missing": [], "strong_fit": True, "summary": "ok"}
+
+    monkeypatch.setattr(app_module, "load_resume", lambda: "My saved resume")
+    monkeypatch.setattr(app_module, "check_fit", fake_check_fit)
+
+    client = app.test_client()
+    response = client.post("/api/fit", json={"posting": "Python job"})
+    assert response.status_code == 200
+    assert seen["skills"] == "My saved resume"

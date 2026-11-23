@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 
-from fit_check import check_fit, make_plan
+from fit_check import check_fit, load_resume, make_plan
 
 app = Flask(__name__)
 
@@ -14,11 +14,12 @@ def home():
 def fit():
     data = request.get_json(silent=True) or {}
     posting = data.get("posting", "").strip()
-    skills = data.get("skills", "").strip()
-    if not posting or not skills:
-        return jsonify({"error": "Please provide both a job posting and your skills."}), 400
+    skills = data.get("skills", "").strip() or load_resume()
+    if not posting:
+        return jsonify({"error": "Please paste a job posting."}), 400
+    if not skills:
+        return jsonify({"error": "No resume saved yet. Add a resume.txt file."}), 400
     return jsonify(check_fit(posting, skills))
-
 
 @app.route("/api/plan", methods=["POST"])
 def plan():
